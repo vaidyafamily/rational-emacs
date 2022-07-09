@@ -24,5 +24,5 @@
 
 (defcustom rational-exwm-titles-by-class '()
   "Alist specifying how certain program classes should be named. Keys should be strings that contain the xwindows program class name. Values should be strings specifying how the class should be named."
-  :type '(alist :key-type string :value-type integer)
+  :type '(alist :key-type string :value-type string)
   :group 'rational-ui)
