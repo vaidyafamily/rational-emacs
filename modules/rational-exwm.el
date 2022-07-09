@@ -31,3 +31,8 @@
   "Specifies the number of EXWM workspaces on startup."
   :type integer
   :group 'rational-ui)
+
+(defcustom rational-exwm-display-battery nil
+  "Specifies whether or not the status of the battery should be displayed."
+  :type boolean
+  :group 'rational-ui)
