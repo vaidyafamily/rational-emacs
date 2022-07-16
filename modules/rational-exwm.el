@@ -37,6 +37,7 @@
   :type boolean
   :group 'rational-ui)
 
+;; These keys are sent directly to Emacs rather than an EXWM window when in line mode. 
 (customize-set-variable exwm-input-prefix-keys
                       '(?\C-x
 			?\C-u
@@ -47,7 +48,52 @@
 			?\M-`
 			?\M-&
 			?\M-:
-			?\C-\M-j  ;; Buffer list
-			?\M-\ ))  ;; Ctrl+Space
+			?\C-\M-j  
+			?\M-\ ))  
 
- 
+;; These keys are sent directly to Emacs rather than an EXWM window in both char mode and line mode. They are also added to the global keymap. 
+(customize-set-variable exwm-input-global-keys
+			`(([?\s-r] . exwm-reset)
+			  ([s-left] . windmove-left)
+			  ([s-right] . windmove-right)
+			  ([s-up] . windmove-up)
+			  ([s-down] . windmove-down)  
+			  ([?\s-h] . windmove-left)
+		   	  ([?\s-l] . windmove-right)
+			  ([?\s-k] . windmove-up)
+		          ([?\s-j] . windmove-down)
+			  ([?\s-f] . exwm-layout-set-fullscreen)
+		          ([?\s-H] . windmove-swap-states-left)
+		          ([?\s-L] . windmove-swap-states-right)
+		          ([?\s-K] . windmove-swap-states-up)
+		          ([?\s-J] . windmove-swap-states-down)
+	                  ([?\s-Q] . kill-buffer-and-window)
+		          ([?\s-E] . save-buffers-kill-terminal)
+                          ([?\s-w] . exwm-workspace-switch)
+
+			  ;; Set s-# to switch or create workspace # (# is 0-9)
+			  ,@(mapcar (lambda (i)
+				      `(,(kbd (format "%s-%d" i)) . (lambda ()
+								      (interactive)
+								      (exwm-workspace-switch-create ,i))))
+				    (number-sequence 0 9))
+
+			  ;; Set s-S-# to move a program to workspace # (# is 0-9)
+			  (let ((shifted-nums-alist '((0 . ?\()
+                                                      (1 . ?\!)
+						      (2 . ?@)
+						      (3 . ?#)
+						      (4 . ?$)
+						      (5 . ?\%)
+						      (6 . ?^)
+						      (7 . ?&)
+						      (8 . ?\*)
+						      (9 . ?\())))
+			    ,@(mapcar (lambda (i)
+				        `(,(kbd (format "%s-%c" (alist-get i shifted-nums-alist)))
+					  (lambda ()
+					    (interactive)
+					    (exwm-workspace-move-window ,i))))
+				      (number-sequence 0 9)))))
+
+(exwm-enable)
